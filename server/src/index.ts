@@ -3,7 +3,8 @@ import express from "express";
 const app = express();
 
 app.get("/",(req,res)=>{
-    res.send("Hello from server");
+    const query = req.body.query;
+    const token = req.body.token;
 });
 
 app.listen(3000, ()=>{
