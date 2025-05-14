@@ -1,6 +1,10 @@
 import express from "express";
+import userRouter from "./router/user";
+
 
 const app = express();
+
+app.use('/user', userRouter);
 
 app.get("/",(req,res)=>{
     const query = req.body.query;
