@@ -3,6 +3,8 @@ import userRouter from "./router/user";
 
 
 const app = express();
+const PORT = 3000;
+app.use(express.json());
 
 app.use('/user', userRouter);
 
@@ -12,5 +14,5 @@ app.get("/",(req,res)=>{
 });
 
 app.listen(3000, ()=>{
-    console.log(`App is running at PORT 3000.`);
+    console.log(`App is running at PORT ${PORT}`);
 })
