@@ -3,7 +3,11 @@ import { Router,Response,Request } from "express";
 const userRouter = Router();
 
 userRouter.post('/chat',(req: Request, res: Response)=>{
-    res.send('Hello ');
+    const query = req.body.query;
+    const context = req.body.context;
+    const systemPrompt = req.body.systemPrompt;
+
+     //make a llm call.
 })
 
 export default userRouter;
