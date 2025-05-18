@@ -6,8 +6,6 @@ userRouter.post('/chat',(req: Request, res: Response)=>{
     const query = req.body.query;
     const context = req.body.context;
     const systemPrompt = req.body.systemPrompt;
-
-     //make a llm call.
 })
 
 export default userRouter;
