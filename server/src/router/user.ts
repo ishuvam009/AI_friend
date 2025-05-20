@@ -6,6 +6,7 @@ userRouter.post('/chat',(req: Request, res: Response)=>{
     const query = req.body.query;
     const context = req.body.context;
     const systemPrompt = req.body.systemPrompt;
+    const hasPaid = req.body.hasPaid; 
 })
 
 export default userRouter;
