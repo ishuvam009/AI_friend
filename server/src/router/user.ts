@@ -9,10 +9,11 @@ userRouter.post('/chat',(req: Request, res: Response)=>{
     const hasPaid = req.body.hasPaid;
     
     if(!query && !context && !hasPaid){
-        res.status(406).json({message:''})
+        res.status(406).json({message:'Error in context'})
     }
 
     //(query + context) + system prompt 
+
 })
 
 export default userRouter;
