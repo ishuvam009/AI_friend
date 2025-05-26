@@ -1,62 +1,61 @@
-import { Router, Request, Response } from 'express';
-import axios from 'axios';
+import axios from "axios";
+import { Router,Response,Request } from "express";
 
 const userRouter = Router();
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_API_KEY = '';
 
-// Gemini API call function
-async function geminiApiCall(query: string, context: string, systemPrompt: string) {
-  try {
-    const response = await axios.post(
-      GEMINI_API_URL,
-      {
+const geminiApiCall = async(query: string, context: string, systemPrompt: string)=> {
+    const model = 'gemini-2.0-flash';
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+    
+    const requestBody = {
         system_instruction: {
-          parts: [
-            {
-              text: systemPrompt,
-            },
-          ],
+            parts: [
+                {
+                    text: systemPrompt
+                }
+            ]
         },
         contents: [
-          {
-            parts: [
-              {
-                text: `${context}\n${query}`,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+            {
+                parts: [
+                    {
+                        text: query
+                    }
+                ]
+            }
+        ]
+    };
 
+    const headers = {
+        'Content-Type':'application/josn'
+    };
+
+    const response = await axios.post(url, requestBody, {headers});
     return response.data;
-  } catch (error: any) {
-    console.error('Gemini API Error:', error.response?.data || error.message);
-    throw new Error('Failed to fetch from Gemini API');
-  }
-}
+};
 
-// Route
-userRouter.post('/chat', async (req: Request, res: Response) => {
-  try {
-    const { query, context = '', systemPrompt, hasPaid } = req.body;
 
-    if (!query || !systemPrompt || hasPaid !== true) {
-       res.status(406).json({ message: 'Invalid input or user not authorized' });
+userRouter.post('/chat',async (req: Request, res: Response)=>{
+    try {
+        const query = req.body.query;
+        const context = req.body.context;
+        const systemPrompt = req.body.systemPrompt; //should be stores not should asked every time.
+        const hasPaid = req.body.hasPaid;
+        
+        if(!query && !context && !hasPaid){
+            res.status(406).json({message:'Error in context'});
+        }
+
+        const response = await geminiApiCall(query,context,systemPrompt);
+        res.status(200).json(response);
+
+        //(query + context) + system prompt 
+    } catch (error) {
+        console.log(error,('Error.'));
     }
 
-    const response = await geminiApiCall(query, context, systemPrompt);
-    res.json(response);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message || 'Internal Server Error' });
-  }
 });
 
 export default userRouter;
