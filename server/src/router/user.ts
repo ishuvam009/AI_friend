@@ -53,9 +53,15 @@ userRouter.post('/chat',async (req: Request, res: Response)=>{
 
         //(query + context) + system prompt 
     } catch (error) {
-        console.log(error,('Error.'));
+        console.log('Error.',error);
+        res.status(500).json({message: 'Internal server error.',error})
     }
 
 });
+
+
+userRouter.get('/',(req: Request,res: Response)=>{
+    res.status(200).json({message: 'OK'});
+})
 
 export default userRouter;
